@@ -35,7 +35,7 @@ display_version() {
     echo "$(basename "$0") 0.1"
     echo "copyright (c) 2026 michael turenne and contributors"
     # TODO: update this url
-    echo "report bugs at: https://git.disdyakis.com/ceramics-scripts/"
+    echo "report bugs at: https://github.com/disdyakis/ceramics-tools/issues"
 }
 # summary function (args order): width, height, ppi, thickness, depth
 summary() {
