@@ -5,7 +5,7 @@ bash scripts powered by OpenSCAD to create custom texture rollers, stamps, and s
 
 ## Tools
 
-1. hollow cylindrical texture roller
+1. [hollow cylindrical texture roller](https://github.com/disdyakis/ceramics-tools/tree/main/roller)
 2. spherical texture roller (in progress...)
 3. flat stamp (in progress...)
 4. sprig mold (in progress...)
