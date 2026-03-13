@@ -66,7 +66,7 @@ this project's root directory also has two related helper scripts in the 'extras
 
 to make it work properly in openSCAD, you'll just have make the following changes:
 
-- replace instances of `$ppi`, `$h`, `$w`, `$depth` with values (`$h` and `$w` should the the dimensions of the image)
+- replace instances of `$ppi`, `$h`, `$w`, `$depth`, `$threshold`, `$hole`, `$clearence`, `$img` with values (`$h` and `$w` should the the dimensions of the image)
 
 if you make changes to the script and then revert the changes above, you can use the `/extras/scad_to_print_f.sh` script to output a replacement for the `printf` command on line XXX of `img_to_stamp.sh`
 
