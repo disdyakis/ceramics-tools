@@ -3,10 +3,15 @@
 
 generates a hollow, cylindrical, texture roller using OpenSCAD from an input image
 
-<img src="./example/pattern.jpg" width="250">
-<img src="./example/roller.jpg" width="250">
-<img src="./example/clay.jpg" width="250">
+<p align="middle">
+<img alt="image depicting seamless/tileable abstract black and white vintage floral pattern" src="./example/pattern.jpg" width="250">
+<img alt="photo of a 3d printed cylindrical texture roller, with the texture from the previous image, sitting next to some clay" src="./example/roller.jpg" width="250">
+<img alt="photo of a slab of clay with the floral texture applied to it, with the 3d printed texture roller sitting next to it" src="./example/clay.jpg" width="250">
+</p>
+<p align="middle">
+<i>roller pictured is 3.41", with a depth and thickness of 5mm, and a resolution of 150ppi</i><br>
 <a href="https://www.vecteezy.com/vector-art/7892501-pattern-vintage-seamless-vector-floral-wallpaper-background-illustration">(pattern by Bambang Ratu Wibowo via vecteezy)</a>
+</p>
 
 ## Pre-requisites
 - macOS or Linux
