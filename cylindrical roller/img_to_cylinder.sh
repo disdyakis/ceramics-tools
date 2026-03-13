@@ -289,7 +289,7 @@ printf "include <BOSL2/std.scad>\ninclude <$temp_dir/texture.scad>\n\n\$fn= \$pr
 $cmd -q --export-format stl -o "$dir"/"$output" --backend Manifold "$temp_dir"/roller.scad & pid=$!
 # spinner logic, remove this and the & pid=$! on the line above to remove spinner
 trap 'kill $pid; rm -rf "$temp_dir"; exit' INT
-sp=("⣼" "⣹" "⢻" "⠿" "⡟" "⣏" "⣧")
+sp=("⣧" "⣏" "⡟" "⠿" "⢻" "⣹" "⣼")
 frame_index=0
 frame_count=7
 while ps -p $pid > /dev/null
