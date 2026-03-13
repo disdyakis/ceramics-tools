@@ -12,9 +12,9 @@ generates a hollow, cylindrical, texture roller using OpenSCAD from an input ima
 ## Usage
 
 ```
-usage: .\img_to_texture_roller.sh [analyze] { --help | -v --version | ...options } image
+usage: .\img_to_cylinder.sh [analyze] { --help | -v --version | ...options } image
 
-script that uses openscad to generate a texture roller from an image input.
+script that uses openscad to generate a cylindrical texture roller from an image input.
 outputs an stl file for 3d printing
 
 	--help		display this message
@@ -27,7 +27,7 @@ outputs an stl file for 3d printing
 	-o, --output		output file (default ./roller.stl)
 
 analyze:
-usage: .\img_to_texture_roller.sh analyze { -h --height | -w --width | -ar --aspect-ratio | -ppi --ppi | -r --radius | -l --length | -t --thickness }
+usage: .\img_to_cylinder.sh analyze { -h --height | -w --width | -ar --aspect-ratio | -ppi --ppi | -r --radius | -l --length | -t --thickness }
 
 specify known variables to find what the unkown variables should be
 
@@ -43,7 +43,7 @@ helper command to figure out missing dimensions from known values
 #### Example
 
 ```
-$ ./img_to_texture_roller.sh analyze -ar 20:1 -r 4 -ppi 150
+$ ./img_to_cylinder.sh analyze -ar 20:1 -r 4 -ppi 150
 
 image
 	dimensions: 3953x197
@@ -61,9 +61,9 @@ NOTE: the aspect ratio and the radius in the summary aren't exactly 20:1 and 4 r
 
 ## Helper Scripts
 
-this directory also has two helper scripts: `roller.scad`, and `scad_to_printf.sh`
+this project's root directory also has two related helper scripts in the 'extras' folder: `cylindrical_roller.scad`, and `scad_to_printf.sh`
 
-`roller.scad` is the openSCAD file that's actually doing all the heavy lifting. you can just open this in the openSCAD gui and use it without using the bash script.
+`cylindrical_roller.scad` is the openSCAD file that's actually doing all the heavy lifting. you can just open this in the openSCAD gui and use it without using the bash script.
 
 to make it work properly in openSCAD, you'll just have make the following changes:
 
@@ -71,7 +71,7 @@ to make it work properly in openSCAD, you'll just have make the following change
   - to generate these from an image, use one of the `img2scad` scripts in the scripts folder located in the BOSL2 library directory
 - replace instances of `$ppi`, `$h`, `$w`, `$depth`, `$thickness` with values (`$h` and `$w` should the the dimensions of the BOSL2 texture)
 
-if you make changes to the script and then revert the changes above, you can use the `scad_to_print_f.sh` script to output a replacement for the `printf` command on line 284 of `img_to_texture_roller.sh`
+if you make changes to the script and then revert the changes above, you can use the `/extras/scad_to_print_f.sh` script to output a replacement for the `printf` command on line 284 of `img_to_cylinder.sh`
 
 ## License
 [ceramics-tools](https://github.com/disdyakis/ceramics-tools) © 2026 by [michael turenne](https://michaelturenne.com) is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt=""  width=16>&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt=""  width=16>&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" width=16>&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" width=16>

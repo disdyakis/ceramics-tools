@@ -1,6 +1,6 @@
 #! /bin/sh
 
-content="`cat $1`"
+content="`cat "$1"`"
 content="${content//\$fn/\\\$fn}"
 content="${content//\$preview/\\\$preview}"
 # add other openscad special variables here
