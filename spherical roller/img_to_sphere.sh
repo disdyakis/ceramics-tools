@@ -231,7 +231,7 @@ python3 ~/Documents/OpenSCAD/libraries/BOSL2/scripts/img2scad.py "$img" -o "$tem
 # avoid race condition where texture.scad isn't readable by the time openscad starts interpreting the script
 sleep 0.1
 printf "include <$temp_dir/texture.scad>\n\$fn= \$preview ? 20 : 200;\n\nfunction roundTo(val, place) = round(val * pow(10, place))/pow(10, place);\nfunction toDegrees(x) = x * 180 / PI;\n\n//desired ppi has to be specified so the embossing depth can be consistent\nppi = $ppi;\nh = $h;\nw = $w;\nr = w/(2 * PI);\nutomm = ppi/25.4;\n// how much the texture extrudes in mm (3-8)\ndepth = $depth * utomm;\n\npoints = [ for (i = [ 0 : h ], j = [ 0 : w - 1 ]) let (radius = i < h ? r + depth * (1 - image_array[i][j]) : r + depth, theta = toDegrees(PI * 2 * j / w), phi = toDegrees(PI * i / h)) [radius * cos(theta) * sin(phi), radius * sin(theta) * sin(phi), radius * cos(phi)] ];\nfaces = [ for (i = [ 0 : h - 1 ], j = [ 0 : w - 1 ]) let (p1 = i * w + j, p3 = (i + 1) * w + (j + 1)) each [[p1, p3, (i + 1) * w + j], [p1, i * w + (j + 1), p3]]];\n\npolyhedron(points = points, faces = faces, convexity = 10);" > "$temp_dir/roller.scad"
-$cmd -q --export-format stl -o "$dir"/"$output" --backend Manifold "$temp_dir"/roller.scad & pid=$!
+$cmd -q --export-format stl -o "$output" --backend Manifold "$temp_dir"/roller.scad & pid=$!
 # spinner logic, remove this and the & pid=$! on the line above to remove spinner
 trap 'kill $pid; rm -rf "$temp_dir"; exit' INT
 sp=("⣧" "⣏" "⡟" "⠿" "⢻" "⣹" "⣼")
