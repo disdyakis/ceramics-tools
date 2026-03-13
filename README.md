@@ -9,6 +9,7 @@ bash scripts powered by OpenSCAD to create custom texture rollers, stamps, and s
 2. [spherical texture roller](https://github.com/disdyakis/ceramics-tools/tree/main/spherical%20roller)
 3. flat stamp (in progress...)
 4. sprig mold (in progress...)
+   - for generating sprig molds from stls (as opposed to images) i recommend [this openscad mold maker by betobetok](https://cults3d.com/en/3d-model/tool/mold-maker-openscad/comments)
 
 ## License
 [ceramics-tools](https://github.com/disdyakis/ceramics-tools) © 2026 by [michael turenne](https://michaelturenne.com) is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt=""  width=16>&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt=""  width=16>&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" width=16>&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" width=16>
