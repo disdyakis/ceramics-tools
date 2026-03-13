@@ -81,7 +81,7 @@ solved() (
 )
 # defaults
 ppi=72
-depth=8
+depth=5
 thickness=5
 dir=$(dirname "$0")
 output=roller.stl
@@ -283,10 +283,12 @@ fi
 # convert image to texture, generate openscad file, and use openscad to generate stl file for 3d printing
 temp_dir=$(mktemp -d)
 python3 ~/Documents/OpenSCAD/libraries/BOSL2/scripts/img2scad.py "$img" -o "$temp_dir"/texture.scad -v image_array -r "${w}"x"${h}" > /dev/null 2>&1 &
+# avoid race condition where texture.scad isn't readable by the time openscad starts interpreting the script
+sleep 0.1
 printf "include <BOSL2/std.scad>\ninclude <$temp_dir/texture.scad>\n\n\$fn= \$preview ? 20 : 200;\n\n//desired ppi has to be specified so the thickness and embossing depth can be consistent\nppi = $ppi;\nh = $h;\nw = $w;\n\nradius = w/(2*PI);\nheight = h;\npath = circle(r=radius);\nutomm = ppi/25.4;\n\n// how much the texture extrudes in mm (3-8)\ndepth = $depth * utomm;\n// how thick the cylinder is (5mm)\nthickness = $thickness * utomm;\n\ndifference() {\n    linear_sweep(\n        path, texture=image_array, tex_inset=false, tex_depth=-depth, tex_size=[h, w],\n        h=height, style=\"alt\");\n    down(10) cylinder(h=height + 20, r=radius - thickness);\n}" > "$temp_dir/roller.scad"
 $cmd -q --export-format stl -o "$dir"/"$output" --backend Manifold "$temp_dir"/roller.scad & pid=$!
 # spinner logic, remove this and the & pid=$! on the line above to remove spinner
-trap 'kill $pid; exit' INT
+trap 'kill $pid; rm -rf "$temp_dir"; exit' INT
 sp=("⣼" "⣹" "⢻" "⠿" "⡟" "⣏" "⣧")
 frame_index=0
 frame_count=7

@@ -71,7 +71,7 @@ to make it work properly in openSCAD, you'll just have make the following change
   - to generate these from an image, use one of the `img2scad` scripts in the scripts folder located in the BOSL2 library directory
 - replace instances of `$ppi`, `$h`, `$w`, `$depth`, `$thickness` with values (`$h` and `$w` should the the dimensions of the BOSL2 texture)
 
-if you make changes to the script and then revert the changes above, you can use the `/extras/scad_to_print_f.sh` script to output a replacement for the `printf` command on line 284 of `img_to_cylinder.sh`
+if you make changes to the script and then revert the changes above, you can use the `/extras/scad_to_print_f.sh` script to output a replacement for the `printf` command on line 288 of `img_to_cylinder.sh`
 
 ## License
 [ceramics-tools](https://github.com/disdyakis/ceramics-tools) © 2026 by [michael turenne](https://michaelturenne.com) is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt=""  width=16>&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt=""  width=16>&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" width=16>&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" width=16>

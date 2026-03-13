@@ -8,6 +8,10 @@ generates a solid, spherical, texture roller using OpenSCAD from an input image
   - (for the shell script, Windows users will still be able to use the .scad file)
 - [OpenSCAD](https://openscad.org/downloads.html)
 
+## Input Images
+
+input images for this script need to be an equirectangular projection with a 2:1 aspect ratio (also known as lat/lon maps). the easiest way to make these kinds of images yourself, in my opinion, would be to make your own seamless cubemap and then use a script such as [cube2sphere](https://github.com/Xyene/cube2sphere) to generate the equirectangular projection.
+
 ## Usage
 
 ```
@@ -66,7 +70,7 @@ to make it work properly in openSCAD, you'll just have make the following change
   - to generate these from an image, use one of the `img2scad` scripts in the scripts folder located in the BOSL2 library directory
 - replace instances of `$ppi`, `$h`, `$w`, `$depth` with values (`$h` and `$w` should the the dimensions of the BOSL2 texture/image)
 
-if you make changes to the script and then revert the changes above, you can use the `/extras/scad_to_print_f.sh` script to output a replacement for the `printf` command on line XXX of `img_to_cylinder.sh`
+if you make changes to the script and then revert the changes above, you can use the `/extras/scad_to_print_f.sh` script to output a replacement for the `printf` command on line 234 of `img_to_cylinder.sh`
 
 ## License
 [ceramics-tools](https://github.com/disdyakis/ceramics-tools) © 2026 by [michael turenne](https://michaelturenne.com) is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt=""  width=16>&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt=""  width=16>&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" width=16>&nbsp;<img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" width=16>

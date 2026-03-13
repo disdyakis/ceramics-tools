@@ -42,7 +42,8 @@ summary() {
     echo -e "\taspect ratio: 2:1"
     echo "roller"
     echo -e "\tppi: $3"
-    echo -e "\tradius: $(bc -l <<<"scale=2;($1/((8*a(1))*$3))")in."
+    echo -e "\tradius: $(bc -l <<<"scale=2;(($1 + (0.039*$4/$3))/((8*a(1))*$3))")in."
+    echo -e "\ttexture depth: ${4}mm"
     echo
 }
 # helper functions
@@ -59,7 +60,7 @@ solved() (
 )
 # defaults
 ppi=72
-depth=8
+depth=5
 dir=$(dirname "$0")
 output=roller.stl
 # parse args
@@ -122,7 +123,7 @@ if [[ $analyze -eq 1 ]]; then
     if ! [ -z "$w" ]; then which_solved[1]=true; fi
     if ! [ -z "$r" ]; then which_solved[2]=true; fi
     if ! [ -z "$ppi" ]; then which_solved[3]=true; fi
-    if [ -n "$h" -a -n "$w" -a "$w" -ne $((2 * h)) ]; then
+    if [ -z "$h" -a -z "$w" -a $((w)) -ne $((2 * h)) ]; then
         echo "$bold${yellow}WARNING:$reset provided aspect ratio is not 2:1, recalculating h"
         unset h
         which_solved[0]=false
@@ -144,20 +145,17 @@ if [[ $analyze -eq 1 ]]; then
     while [ $(solved $which_solved) -ne 4 ]; do
         prev_solved=$(solved $which_solved)
         if [ -z "$h" ]; then
-            if [ -n "$w" ] && [ -n "$ar" ]; then
-                h=$(bc <<<"var=$w/$ar; scale=0; var/1")
-                which_solved[0]=true
-            elif [ -n "$l" ] && [ -n "$ppi" ]; then
-                h=$(bc <<<"var=$l*$ppi; scale=0; var/1")
+            if [ -n "$w" ]; then
+                h=$(bc <<<"var=$w/2; scale=0; var/1")
                 which_solved[0]=true
             fi
         fi
         if [ -z "$w" ]; then
-            if [ -n "$h" ] && [ -n "$ar" ]; then
-                w=$(bc <<<"var=$h*$ar;scale=0;var/1")
+            if [ -n "$h" ]; then
+                w=$(bc <<<"var=$h/2;scale=0;var/1")
                 which_solved[1]=true
             elif [ -n "$r" ] && [ -n "$ppi" ]; then
-                w=$(bc -l <<<"var=($r + (0.039*$thickness)) * 8*a(1) * $ppi;scale=0;var/1")
+                w=$(bc -l <<<"var=($r - (0.039*$depth/$ppi)) * 8*a(1) * $ppi;scale=0;var/1")
                 which_solved[1]=true
             fi
         fi
@@ -165,40 +163,14 @@ if [[ $analyze -eq 1 ]]; then
             if [ -n "$r" ] && [ -n "$w" ]; then
                 circumference=$(bc -l <<<"scale=2;$r*8*a(1)")
                 ppi=$(bc <<<"scale=10;var=$w/$circumference;scale=0;var/1")
-                which_solved[5]=true
-            elif [ -n "$h" ] && [ -n "$l" ]; then
-                ppi=$(bc <<<"scale=10;var=$h/$l;scale=0;var/1")
-                which_solved[5]=true
-            fi
-        fi
-        if [ -z "$ar" ]; then
-            if [ -n "$h" ] && [ -n "$w" ]; then
-                ar=$(bc <<<"scale=3;$w/$h")
-                which_solved[2]=true
-            elif [ -n "$r" ] && [ -n "$l" ]; then
-                ar=$(bc <<<"scale=3;$r/$l")
-                which_solved[2]=true
-            fi
+                which_solved[3]=true
+           fi
         fi
         if [ -z "$r" ]; then
             if [ -n "$w" ] && [ -n "$ppi" ]; then
                 circumference=$(bc <<<"scale=2;$ppi/$w")
                 r=$(bc -l <<<"var=$circumference/(8*a(1));scale=0;var/1")
-                which_solved[4]=true
-            elif [ -n "$l" ] && [ -n "$ar" ]; then
-                circumference=$(bc <<<"scale=2;$l*$ar")
-                r=$(bc -l <<<"var=$circumference/(8*a(1));scale=0;var/1")
-                which_solved[4]=true
-            fi
-        fi
-        if [ -z "$l" ]; then
-            if [ -n "$h" ] && [ -n "$ppi" ]; then
-                l=$(bc <<<"scale=10;var=$ppi/$h;scale=0;var/1")
-                which_solved[3]=true
-            elif [ -n "$r" ] && [ -n "$ar" ]; then
-                circumference=$(bc -l <<<"scale=10;$r*8*a(1)")
-                l=$(bc <<<"scale=10;var=$circumference/$ar;scale=0;var/1")
-                which_solved[3]=true
+                which_solved[2]=true
             fi
         fi
         if [ $(solved $which_solved) -eq $prev_solved ]; then
@@ -256,10 +228,12 @@ fi
 # convert image to texture, generate openscad file, and use openscad to generate stl file for 3d printing
 temp_dir=$(mktemp -d)
 python3 ~/Documents/OpenSCAD/libraries/BOSL2/scripts/img2scad.py "$img" -o "$temp_dir"/texture.scad -v image_array -r "${w}"x"${h}" > /dev/null 2>&1 &
-printf "include <$temp_dir/texture.scad>\n\$fn= \$preview ? 20 : 200;\n\n//desired ppi has to be specified so the thickness and embossing depth can be consistent\nppi = $ppi;\nh = $h;\nw = $w;\nr = w/(2 * PI);\nutomm = ppi/25.4;\n// how much the texture extrudes in mm (3-8)\ndepth = $depth * utomm;\n\npoints = [ for (i = [ 0 : h ], j = [ 0 : w - 1 ]) let (radius = i < h ? r + depth * (1 - leapord[i][j]) : r + depth, theta = toDegrees(PI * 2 * j / w), phi = toDegrees(PI * i / h)) [radius * cos(theta) * sin(phi), radius * sin(theta) * sin(phi), radius * cos(phi)] ];\n\nfaces = [ for (i = [ 0 : h - 1 ], j = [ 0 : w - 1 ]) let (p1 = i * w + j, p3 = (i + 1) * w + (j + 1)) each [[p1, p3, (i + 1) * w + j], [p1, i * w + (j + 1), p3]]];\n\npolyhedron(points = points, faces = faces, convexity = 10);" > "$temp_dir/roller.scad"
+# avoid race condition where texture.scad isn't readable by the time openscad starts interpreting the script
+sleep 0.1
+printf "include <$temp_dir/texture.scad>\n\$fn= \$preview ? 20 : 200;\n\nfunction roundTo(val, place) = round(val * pow(10, place))/pow(10, place);\nfunction toDegrees(x) = x * 180 / PI;\n\n//desired ppi has to be specified so the embossing depth can be consistent\nppi = $ppi;\nh = $h;\nw = $w;\nr = w/(2 * PI);\nutomm = ppi/25.4;\n// how much the texture extrudes in mm (3-8)\ndepth = $depth * utomm;\n\npoints = [ for (i = [ 0 : h ], j = [ 0 : w - 1 ]) let (radius = i < h ? r + depth * (1 - image_array[i][j]) : r + depth, theta = toDegrees(PI * 2 * j / w), phi = toDegrees(PI * i / h)) [radius * cos(theta) * sin(phi), radius * sin(theta) * sin(phi), radius * cos(phi)] ];\nfaces = [ for (i = [ 0 : h - 1 ], j = [ 0 : w - 1 ]) let (p1 = i * w + j, p3 = (i + 1) * w + (j + 1)) each [[p1, p3, (i + 1) * w + j], [p1, i * w + (j + 1), p3]]];\n\npolyhedron(points = points, faces = faces, convexity = 10);" > "$temp_dir/roller.scad"
 $cmd -q --export-format stl -o "$dir"/"$output" --backend Manifold "$temp_dir"/roller.scad & pid=$!
 # spinner logic, remove this and the & pid=$! on the line above to remove spinner
-trap 'kill $pid; exit' INT
+trap 'kill $pid; rm -rf "$temp_dir"; exit' INT
 sp=("⣼" "⣹" "⢻" "⠿" "⡟" "⣏" "⣧")
 frame_index=0
 frame_count=7
@@ -273,6 +247,6 @@ do
 done
 printf "done!\n"
 # summary
-summary "$w" "$h" "$ppi" "$thickness" "$depth"
+summary "$w" "$h" "$ppi" "$depth"
 # cleanup tmp files
 rm -rf "$temp_dir"
