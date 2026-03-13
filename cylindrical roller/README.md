@@ -3,6 +3,11 @@
 
 generates a hollow, cylindrical, texture roller using OpenSCAD from an input image
 
+<img src="./example/pattern.jpg" width="250">
+<img src="./example/roller.jpg" width="250">
+<img src="./example/clay.jpg" width="250">
+<a href="https://www.vecteezy.com/vector-art/7892501-pattern-vintage-seamless-vector-floral-wallpaper-background-illustration">(pattern by Bambang Ratu Wibowo via vecteezy)</a>
+
 ## Pre-requisites
 - macOS or Linux
   - (for the shell script, Windows users will still be able to use the .scad file)
